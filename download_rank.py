@@ -31,27 +31,33 @@ def calculate_rankings(csv_file_path):
     cloud_data = pd.read_csv(csv_file_path)
 
     weights = {
-        'Market Cap': 0.20, 'EV / Annualized Revenue': 0.10, 'EV / Forward Revenue': 0.10,
-        'Efficiency': 0.10, 'Revenue Growth Rate': 0.15, 'Gross Margin': 0.10,
-        'LTM FCF Margin': 0.15, 'SGA Margin': 0.025, 'R&D Revenue': 0.025,
-        'Sales Marketing Revenue': 0.05
+        'Efficiency': 0.10,
+        'EV / Annualized Revenue': 0.10,
+        'EV / Forward Revenue': 0.10,
+        'Gross Margin': 0.10,
+        'LTM FCF Margin': 0.15,
+        'Market Cap': 0.20,
+        'R&D Revenue': 0.025,
+        'Revenue Growth Rate': 0.15,
+        'Sales Marketing Revenue': 0.05,
+        'SGA Margin': 0.025,
     }
 
     cloud_data['Score'] = (
-        cloud_data['EV / Annualized Revenue'].rank(ascending=True) * weights['EV / Annualized Revenue']
-        + cloud_data['EV / Forward Revenue'].rank(ascending=True) * weights['EV / Forward Revenue']
-        + cloud_data['SGA Margin'].rank(ascending=True) * weights['SGA Margin']
-        + cloud_data['Market Cap'].rank(ascending=False) * weights['Market Cap']
-        + cloud_data['Efficiency'].rank(ascending=False) * weights['Efficiency']
-        + cloud_data['Revenue Growth Rate'].rank(ascending=False) * weights['Revenue Growth Rate']
-        + cloud_data['Gross Margin'].rank(ascending=False) * weights['Gross Margin']
-        + cloud_data['LTM FCF Margin'].rank(ascending=False) * weights['LTM FCF Margin']
-        + cloud_data['R&D Revenue'].rank(ascending=False) * weights['R&D Revenue']
-        + cloud_data['Sales Marketing Revenue'].rank(ascending=False) * weights['Sales Marketing Revenue']
+        cloud_data['Efficiency'].rank(ascending=True) * weights['Efficiency']
+        + cloud_data['EV / Annualized Revenue'].rank(ascending=False) * weights['EV / Annualized Revenue']
+        + cloud_data['EV / Forward Revenue'].rank(ascending=False) * weights['EV / Forward Revenue']
+        + cloud_data['Gross Margin'].rank(ascending=True) * weights['Gross Margin']
+        + cloud_data['LTM FCF Margin'].rank(ascending=True) * weights['LTM FCF Margin']
+        + cloud_data['Market Cap'].rank(ascending=True) * weights['Market Cap']
+        + cloud_data['R&D Revenue'].rank(ascending=True) * weights['R&D Revenue']
+        + cloud_data['Revenue Growth Rate'].rank(ascending=True) * weights['Revenue Growth Rate']
+        + cloud_data['Sales Marketing Revenue'].rank(ascending=True) * weights['Sales Marketing Revenue']
+        + cloud_data['SGA Margin'].rank(ascending=False) * weights['SGA Margin']
     ).round(2)
 
-    cloud_data.sort_values(by='Score', ascending=True, inplace=True)
-    cloud_data['Rank'] = cloud_data['Score'].rank(method='first', ascending=True).astype(int)
+    cloud_data.sort_values(by='Score', ascending=False, inplace=True)
+    cloud_data['Rank'] = cloud_data['Score'].rank(method='first', ascending=False).astype(int)
     cloud_data.to_csv(FINAL_OUTPUT_FILE, index=False)
 
 # Main execution
