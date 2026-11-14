@@ -22,7 +22,7 @@ def process_excel_to_csv(input_file, output_csv):
     excel_file = pd.ExcelFile(input_file)
     second_sheet_name = excel_file.sheet_names[1]
     second_sheet_df = pd.read_excel(input_file, sheet_name=second_sheet_name, skiprows=7)
-    second_sheet_df.drop(second_sheet_df.index[[0, 1]], inplace=True)
+    second_sheet_df = second_sheet_df.drop(second_sheet_df.index[[0, 1]])
     second_sheet_df = second_sheet_df.iloc[:, 1:]
     second_sheet_df.to_csv(output_csv, index=False)
 
@@ -56,7 +56,7 @@ def calculate_rankings(csv_file_path):
         + cloud_data['SGA Margin'].rank(ascending=False) * weights['SGA Margin']
     ).round(2)
 
-    cloud_data.sort_values(by='Score', ascending=False, inplace=True)
+    cloud_data = cloud_data.sort_values(by='Score', ascending=False)
     cloud_data['Rank'] = cloud_data['Score'].rank(method='first', ascending=False).astype(int)
     cloud_data.to_csv(FINAL_OUTPUT_FILE, index=False)
 
